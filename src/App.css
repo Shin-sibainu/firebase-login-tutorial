@@ -1,0 +1,32 @@
+.App {
+  text-align: center;
+  margin-top: 15rem;
+}
+
+p {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+img {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+}
+
+button {
+  margin-top: 14px;
+  padding: 7px 40px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 1px 5px 10px #626262;
+  cursor: pointer;
+  background-color: #cf9b48;
+  color: white;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
