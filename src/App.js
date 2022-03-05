@@ -6,11 +6,9 @@ import { AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <div className="App">
-        <h1>Firebaseでログイン機能を実装しよう</h1>
-        <Home />
-      </div>
-    </AuthProvider>
+    <div className="App">
+      <h1>Firebaseでログイン機能を実装しよう</h1>
+      <Home />
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { auth, db, provider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
@@ -8,6 +8,7 @@ import {
   collection,
   doc,
   getDoc,
+  onSnapshot,
   setDoc,
   writeBatch,
 } from "firebase/firestore";
@@ -15,15 +16,27 @@ import {
 import { useAuthContext } from "../context/AuthContext";
 
 function Home() {
-  // const [user] = useAuthState(auth);
-  //useAuthContext()で監視してみる。
-  const { user } = useAuthContext();
+  const [user] = useAuthState(auth);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      // console.log(auth.currentUser.displayName);
+      console.log(user.uid);
+      const userDataRef = doc(db, "users", auth.currentUser.uid);
+      onSnapshot(userDataRef, (doc) => {
+        // console.log(doc.data());
+        setUserData(doc.data());
+      });
+      console.log("a");
+    }
+  }, [user]);
 
   return (
     <>
       {user ? (
         <>
-          <UserInfo user={user} />
+          <UserInfo user={user} userData={userData} />
           <SignOutButton />
           <GamePlayButton user={user} />
         </>
@@ -59,24 +72,25 @@ function SignOutButton() {
   );
 }
 
-function UserInfo({ user }) {
+function UserInfo({ user, userData }) {
   // //ここで登録できるじゃん？
   //score情報の保存はゲームプレイした後で良い。だから今はこのコレクションは必要ない。なぜならuserの中にdisplayNameの情報はあるから。名前はある。
-  // useEffect(async () => {
-  //   console.log("userinfo");
-  //   // グローバルに管理できるユーザーが欲しい。
-  //   if (user) {
-  //     await addDoc(collection(db, "users"), {
-  //       displayName: "testUser",
-  //       photoURL: "testURL",
-  //       score: 1000,
-  //     });
-  //   }
-  // }, []);
+  useEffect(async () => {
+    console.log("userinfo");
+    // グローバルに管理できるユーザーが欲しい。
+    if (user) {
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        displayName: auth.currentUser.displayName,
+        photoURL: auth.currentUser.photoURL,
+        score: 1000,
+      });
+    }
+  }, []);
   return (
     <div className="userInfo">
       <img src={user.photoURL}></img>
       <p>{user.displayName}</p>
+      <p>{userData.score}</p>
     </div>
   );
 }
